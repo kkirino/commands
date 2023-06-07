@@ -1,16 +1,12 @@
 # Repository for my own command-line tools
 
 
-## excelcol2num.py
+- open.sh
 
+- xls2csv.py
 
-## open.sh
+- excelcol2num.py
 
-
-## pwsh.sh
-
-
-## xls2csv.py
-
+- onedrivesync.sh
 
 
