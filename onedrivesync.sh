@@ -24,13 +24,10 @@ EOF
 
 # エラーの対処
 if [ ! $# -eq 1 ] && [ ! $# -eq 2 ]; then
-    echo 1
     usage
 elif [ ! "$1" = 'push' ] && [ ! "$1" = 'pull' ]; then
-    echo 2
     usage
 elif [$# -eq 2 ] && [ ! "$2" = '--dry-run' ] && [ ! "$2" = '-n' ]; then
-    echo 3
     usage
 elif [ ! -d ${DIR_DEST} ] && [ "$1" = 'pull' ]; then
     echo "onedrivesync: ${DIR_SOURCE##*/}: no such directory in OneDrive"
