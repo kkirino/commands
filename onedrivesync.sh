@@ -15,10 +15,12 @@ REMOTE_DIR=${ONEDRIVE_DIR}/${DIR_NAME}
 function usage() {
     cat <<EOF
 usage: onedrivesync [command]
-command: push    copy files in local dir to OneDrive remote dir
-         pull    copy OneDrive remote dir files to local dir
-         status  show information of local and remote synchronization
-         rm      remove iOneDrive dir
+command: push    copy files at local to remote on OneDrive
+         pull    copy files at remote on OneDrive to local
+         status  show infomation of local-remote synchronization
+         ls      show all OneDrive remote directories
+         rm      remove an OneDrive remote directory
+         clean   remove all OneDrive remote directories
 EOF
     exit 1
 }
@@ -26,7 +28,7 @@ EOF
 # エラーの対処
 if [ ! $# -eq 1 ]; then
     usage
-elif [ ! "$1" = 'push' ] && [ ! "$1" = 'pull' ] && [ ! "$1" = 'status' ] && [ ! "$1" = 'rm' ]; then
+elif [ ! "$1" = 'push' ] && [ ! "$1" = 'pull' ] && [ ! "$1" = 'status' ] && [ ! "$1" = 'ls' ] && [ ! "$1" = 'rm' ] && [ ! "$1" = 'clean' ]; then
     usage
 elif [ ! -d ${REMOTE_DIR} ] && [ "$1" = 'pull' ]; then
     echo "onedrivesync: ${DIR_NAME}: no remote directory detected"
@@ -48,7 +50,6 @@ if [ "$1" = 'push' ]; then
     elif [ "$input" = 'yes' ]; then
         # rsync 実行
         rsync -auvh --delete ${LOCAL_DIR} ${ONEDRIVE_DIR}
-        exit 0
     else
         echo "onedrivesync: $input: input yes or no"
         exit 1
@@ -65,7 +66,6 @@ elif [ "$1" = 'pull' ]; then
     elif [ "$input" = 'yes' ]; then
         # rsync 実行
         rsync -auvh --delete ${REMOTE_DIR} ${PULL_TO_DIR}
-        exit 0
     else
         echo "onedrivesync: $input: input yes or no"
         exit 1
@@ -88,9 +88,24 @@ elif [ "$1" = 'status' ]; then
         echo "         updated at ${REMOTE_UPDATE_TIME}"
         exit 0
     fi
+# ls の処理 
+elif [ "$1" = 'ls' ]; then
+    ls -a ${ONEDRIVE_DIR}
 # rm の処理
-else
+elif [ "$1" = 'ls' ]; then
     rm -rf ${REMOTE_DIR}
-    exit 0
+# clean の処理
+else
+    # 実行の可否を問う
+    echo -n 'Do you really want to remove all OneDrive remote directories? [yes/no]: '
+    read input
+    if [ "$input" = 'no' ]; then 
+        exit 0
+    elif [ "$input" = 'yes' ]; then
+        rm -rf ${ONEDRIVE_DIR}/*
+    else
+        echo "onedrivesync: $input: input yes or no"
+        exit 1
+    fi
 fi
  
