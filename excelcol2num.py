@@ -4,12 +4,6 @@ import argparse
 import sys
 
 
-# TODO
-# add option to conduct below
-# alphabetical column name -> integer
-# integer -> alphabetical column name
-
-
 def get_args():
     parser = argparse.ArgumentParser(
         description="convert alphabetical column names to numbers"

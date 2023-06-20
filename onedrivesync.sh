@@ -77,20 +77,20 @@ elif [ "$1" = 'status' ]; then
         echo "onedrivesync: ${DIR_NAME}: no remote directory detected"
         exit 1
     else
-        LOCAL_FILE_NUMBER=$(find ${LOCAL_DIR} -type f | wc -l)
-        LOCAL_UPDATE_TIME=$(ls -alFR --time-style=+'%Y-%m-%d %H:%M:%S' ${LOCAL_DIR} | awk '$6!=""{print $6,$7}' | sort -r | head -n 1)
-        REMOTE_FILE_NUMBER=$(find ${REMOTE_DIR} -type f | wc -l)
-        REMOTE_UPDATE_TIME=$(ls -alFR --time-style=+'%Y-%m-%d %H:%M:%S' ${REMOTE_DIR} | awk '$6!=""{print $6,$7}' | sort -r | head -n 1)
+        LOCAL_NUMBER=$(tree -a ${LOCAL_DIR} | tail -n 1)
+        LOCAL_UPDATE_TIME=$(ls -alFR --time-style=+'%Y-%m-%d %H:%M:%S' ${LOCAL_DIR} | awk '$6!=""&&!/\/$/{print $6,$7}' | sort -r | head -n 1)
+        REMOTE_NUMBER=$(tree -a ${REMOTE_DIR} | tail -n 1)
+        REMOTE_UPDATE_TIME=$(ls -alFR --time-style=+'%Y-%m-%d %H:%M:%S' ${REMOTE_DIR} | awk '$6!=""&&!/\/$/{print $6,$7}' | sort -r | head -n 1)
         echo "name:    ${DIR_NAME}"
-        echo "local:   ${LOCAL_FILE_NUMBER} files detected"
+        echo "local:   ${LOCAL_NUMBER}"
         echo "         updated at ${LOCAL_UPDATE_TIME}"
-        echo "rermote: ${REMOTE_FILE_NUMBER} files detected"
+        echo "rermote: ${REMOTE_NUMBER}"
         echo "         updated at ${REMOTE_UPDATE_TIME}"
         exit 0
     fi
 # ls の処理 
 elif [ "$1" = 'ls' ]; then
-    ls -a ${ONEDRIVE_DIR}
+    ls -al ${ONEDRIVE_DIR}
 # rm の処理
 elif [ "$1" = 'ls' ]; then
     rm -rf ${REMOTE_DIR}
